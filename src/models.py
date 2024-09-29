@@ -19,23 +19,24 @@ class User(Base):
 
 class Planets(Base):
     __tablename__ = 'planets'
-    planet_id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     name= Column(String, nullable=False)
     climate= Column(String, nullable=False)
     population= Column(Integer, nullable=False)
     terrain=Column(String, nullable=False)
+    
 
 class Characters(Base):
     __tablename__ = 'characters'
-    character_id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)
     name= Column(String, nullable=False)
     gender= Column(String, nullable=False)
     hair_color= Column(String, nullable=False)
     eye_color=Column(String, nullable=False)
     age=Column(Integer, nullable=False)
-    planet=Column(Integer, ForeignKey('planets.planets_id'), nullable=False)
+    planet=Column(Integer, ForeignKey('planets.id'), nullable=False)
 
-    planet = relationship(Planets)
+    planets = relationship(Planets,  foreign_keys=[planet])
 
 
 
@@ -45,11 +46,11 @@ class Favorite(Base):
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    favorite_planet_id = Column(Integer, ForeignKey('planets.planet_id'), nullable=False)
-    favorite_character_id = Column(Integer, ForeignKey('characters.character_id'), nullable=False)
-    planets = relationship(Planets)
-    characters = relationship(Characters)
-    user = relationship(User)
+    favorite_planet_id = Column(Integer, ForeignKey('planets.id'), nullable=True)
+    favorite_character_id = Column(Integer, ForeignKey('characters.id'), nullable=True)
+    planets = relationship(Planets, foreign_keys=[favorite_planet_id])
+    characters = relationship(Characters, foreign_keys=[favorite_character_id])
+    user = relationship(User, foreign_keys=[user_id])
 
     def to_dict(self):
         return {}
